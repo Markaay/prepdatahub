@@ -1,13 +1,11 @@
 //dependencies
 const fs = require('fs');
 const rp = require('request-promise');
-const fbowned = require("nodefb.js");
+const fbowned = require("./nodefb.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
 const pathsource = "prepdatahub/";
-console.log(pathsource);
-console.log(pathsource + "access_data.json");
 
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));

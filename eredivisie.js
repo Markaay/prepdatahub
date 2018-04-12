@@ -5,7 +5,7 @@ const fbowned = require("nodefb.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-pathsource = "prepdatahub/";
+const pathsource = "prepdatahub/";
 
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));

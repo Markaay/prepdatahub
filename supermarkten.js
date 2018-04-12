@@ -5,10 +5,11 @@ const fbowned = require("./nodefb.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
+pathsource = "prepdatahub/";
 
 //load access data
-const accessdata = JSON.parse(fs.readFileSync('access_data.json', 'utf8'));
-const dbdata =  JSON.parse(fs.readFileSync('dbdata.json', 'utf8'));
+const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
+const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
 const pages = ["jumbosupermarkten", "PLUSsupermarkt", "EMTESUPERMARKTEN","Dirksupermarkten", "CoopSupermarkten", "lidlnederland","JanLindersSupermarkten", "DEENSupermarkten", "albertheijn"];
 
 let today = new Date();

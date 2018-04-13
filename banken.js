@@ -10,7 +10,7 @@ const pathsource = "prepdatahub/";
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
 const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
-const pages = ["jumbosupermarkten", "PLUSsupermarkt", "EMTESUPERMARKTEN","Dirksupermarkten", "CoopSupermarkten", "lidlnederland","JanLindersSupermarkten", "DEENSupermarkten", "albertheijn", "SparNL", "Ekoplaza", "Hoogvliet.supermarkten", "mcdsupermarkten", "picnicNL", "poieszsupermarkten", "AgrimarktNL"];
+const pages = ["rabobank", "INGnl", "knab.nl", "bunq", "abnamro", "asnbank", "vanlanschot", "RegioBank", "SNSBank", "TriodosBanknl"];
 
 let today = new Date();
 let yesterday = today.setDate(today.getDate() - 1);

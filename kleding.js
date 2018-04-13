@@ -10,7 +10,7 @@ const pathsource = "prepdatahub/";
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
 const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
-const pages = ["jumbosupermarkten", "PLUSsupermarkt", "EMTESUPERMARKTEN","Dirksupermarkten", "CoopSupermarkten", "lidlnederland","JanLindersSupermarkten", "DEENSupermarkten", "albertheijn", "SparNL", "Ekoplaza", "Hoogvliet.supermarkten", "mcdsupermarkten", "picnicNL", "poieszsupermarkten", "AgrimarktNL"];
+const pages = ["zalando.nl", "ShoebyFashion", "menatworkonline", "sarenza.nl", "hmnetherlands", "aboutyounl", "BeverNL", "bonprixNL", "ca.nederland", "CoolCatNL", "spartoo.nl", "perrysport", "aktiesport", "invitoheadquarters", "jeanscentre.nl", "msmode.nl", "zeemantextielsupers", "OPEN32NL", "Otto", "plutosport.nl", "ScapinoNL", "Scorejeans", "sissyboyjeans", "sneakerdistrict.nl", "veromodanetherlands", "VinginoJeans"];
 
 let today = new Date();
 let yesterday = today.setDate(today.getDate() - 1);

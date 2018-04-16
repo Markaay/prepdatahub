@@ -103,8 +103,8 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
         }
         //aggregate ipm data of last x amount of posts
         if(i<ipmpostamount){
-            post_like_total = post_like_total + post_comments_base;
-            post_comment_total = post_comment_total + post_likes_base;
+            post_like_total = post_like_total + post_likes_base;
+            post_comment_total = post_comment_total + post_comments_base;
             post_share_total = post_share_total + post_share_base;
         }
         //page data to export

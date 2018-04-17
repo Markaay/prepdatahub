@@ -5,7 +5,7 @@ const fbowned = require("./nodefb.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = "prepdatahub/";
+const pathsource = "prepdatahub/"; //"prepdatahub/" on server
 
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
@@ -13,8 +13,8 @@ const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
 const pages = ["jumbosupermarkten", "PLUSsupermarkt", "EMTESUPERMARKTEN","Dirksupermarkten", "CoopSupermarkten", "lidlnederland","JanLindersSupermarkten", "DEENSupermarkten", "albertheijn", "SparNL", "Ekoplaza", "Hoogvliet.supermarkten", "mcdsupermarkten", "picnicNL", "poieszsupermarkten", "AgrimarktNL"];
 
 let today = new Date();
-let yesterday = today.setDate(today.getDate() - 1);
-let lastweekday = today.setDate(today.getDate() - 7);
+let yesterday = new Date().setDate(new Date().getDate() - 1);
+let lastweekday = new Date().setDate(new Date().getDate() - 7);
 
 function app(accessdata, pages, dbdata){
     let fbpagebulk = [];
@@ -25,9 +25,10 @@ function app(accessdata, pages, dbdata){
         console.log(pages[i]);
         let pagerequest = fbowned.constructfb(accessdata, 20, 2000, 3000, pages[i]);
         //console.log(pagerequest);
-        let todaydate = fbowned.dateFormatter(today);
+        let todaydate = fbowned.dateFormatter(new Date());
         let yesterdaydate = fbowned.dateFormatter(yesterday);
         let lastweekdate = fbowned.dateFormatter(lastweekday);
+        console.log(todaydate, yesterdaydate, lastweekdate);
         //construct GET request
         let options = {
             method: 'get',
@@ -54,7 +55,7 @@ function app(accessdata, pages, dbdata){
                     //console.log(fbpagebulk);
                     //console.log(fbpostbulk);
                     //console.log(fbcommentbulk);
-                    fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
+                    //fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
                 }
             })
             .catch(function(err){
@@ -67,7 +68,7 @@ function app(accessdata, pages, dbdata){
                     console.log(fbpagebulk);
                     console.log(fbpostbulk);
                     console.log(fbcommentbulk);
-                    fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
+                    //fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
                 }
             });
     }

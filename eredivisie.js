@@ -13,8 +13,8 @@ const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
 const pages = ["afcajax", "PSV", "feyenoord", "AZAlkmaar", "FCUtrecht1970", "ADODenHaag", "peczwolle", "VitesseArnhem", "scheerenveen", "HeraclesAlmelo", "VVV.Venlo", "FCGroningen", "excelsiorrdam", "WillemIITilburg", "FCTwente", "NACnl", "SpartaRotterdam", "RodaJCKerkrade", "NECNijmegen"];
 
 let today = new Date();
-let yesterday = today.setDate(today.getDate() - 1);
-let lastweekday = today.setDate(today.getDate() - 7);
+let yesterday = new Date().setDate(new Date().getDate() - 1);
+let lastweekday = new Date().setDate(new Date().getDate() - 7);
 
 function app(accessdata, pages, dbdata){
     let fbpagebulk = [];

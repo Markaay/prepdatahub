@@ -13,8 +13,8 @@ const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
 const pages = ["gamma.nl", "formidobouwmarkten", "praxis", "karwei", "HORNBACH.NL", "IKEANederland", "JYSK.nl", "woonexpress", "profijtmeubel", "prontowonen", "KwantumNL", "leenbakker", "carpetrightnederland", "Made.comNederland", "intratuin", "bouwmaatnl", "welkoop", "JouwMultimate", "groenrijk", "tuincentrumcoppelmans", "BoerenbondNL", "avevewinkels", "lifeandgarden"];
 
 let today = new Date();
-let yesterday = today.setDate(today.getDate() - 1);
-let lastweekday = today.setDate(today.getDate() - 7);
+let yesterday = new Date().setDate(new Date().getDate() - 1);
+let lastweekday = new Date().setDate(new Date().getDate() - 7);
 
 function app(accessdata, pages, dbdata){
     let fbpagebulk = [];

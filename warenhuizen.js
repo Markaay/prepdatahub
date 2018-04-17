@@ -13,8 +13,8 @@ const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
 const pages = ["hema", "BlokkerNL", "marskramer.nl", "XenosNL", "action.nederland", "flyingtigernl", "debijenkorf", "hudsonsbaynl", "Intertoys", "bccnl", "Coolblue", "bolpuntcom", "wehkampnl", "mediamarktnl", "AlternateNL", "fonQ.nl"];
 
 let today = new Date();
-let yesterday = today.setDate(today.getDate() - 1);
-let lastweekday = today.setDate(today.getDate() - 7);
+let yesterday = new Date().setDate(new Date().getDate() - 1);
+let lastweekday = new Date().setDate(new Date().getDate() - 7);
 
 function app(accessdata, pages, dbdata){
     let fbpagebulk = [];

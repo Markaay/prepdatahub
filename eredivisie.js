@@ -5,7 +5,7 @@ const fbowned = require("./nodefb.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = "prepdatahub/";
+const pathsource = "";
 
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
@@ -39,6 +39,7 @@ function app(accessdata, pages, dbdata){
             .then(function(response){
                 //fbowned funcion success
                 let apmjson = fbowned.apmmetrics(response, yesterdaydate, dbdata);
+                console.log(apmjson);
                 let fbpagedata = fbowned.fbmetrics(response, todaydate, lastweekdate, "10", apmjson, dbdata);
                 fbpagebulk.push(fbpagedata[0]);
                 for(post=0;post<fbpagedata[1].length;post++){
@@ -54,7 +55,7 @@ function app(accessdata, pages, dbdata){
                     //console.log(fbpagebulk);
                     //console.log(fbpostbulk);
                     //console.log(fbcommentbulk);
-                    fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
+                    //fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
                 }
             })
             .catch(function(err){
@@ -67,7 +68,7 @@ function app(accessdata, pages, dbdata){
                     console.log(fbpagebulk);
                     console.log(fbpostbulk);
                     console.log(fbcommentbulk);
-                    fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
+                    //fbowned.bulkmysql(fbpagebulk, fbpostbulk, fbcommentbulk, dbdata);
                 }
             });
     }

@@ -5,12 +5,13 @@ const fbowned = require("./nodefb.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = "prepdatahub/"; //"prepdatahub/" on server
+const pathsource = ""; //"prepdatahub/" on server
 
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
 const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
-const pages = ["jumbosupermarkten", "PLUSsupermarkt", "EMTESUPERMARKTEN","Dirksupermarkten", "CoopSupermarkten", "lidlnederland","JanLindersSupermarkten", "DEENSupermarkten", "albertheijn", "SparNL", "Ekoplaza", "Hoogvliet.supermarkten", "mcdsupermarkten", "picnicNL", "poieszsupermarkten", "AgrimarktNL"];
+const pages = ["jumbosupermarkten"];
+// "PLUSsupermarkt", "EMTESUPERMARKTEN","Dirksupermarkten", "CoopSupermarkten", "lidlnederland","JanLindersSupermarkten", "DEENSupermarkten", "albertheijn", "SparNL", "Ekoplaza", "Hoogvliet.supermarkten", "mcdsupermarkten", "picnicNL", "poieszsupermarkten", "AgrimarktNL"];
 
 let today = new Date();
 let yesterday = new Date().setDate(new Date().getDate() - 1);
@@ -23,7 +24,7 @@ function app(accessdata, pages, dbdata){
     let completedpromises = 0;
     for(i=0;i<pages.length;i++){
         console.log(pages[i]);
-        let pagerequest = fbowned.constructfb(accessdata, 20, 2000, 3000, pages[i]);
+        let pagerequest = fbowned.constructfb(accessdata, "20", "2000", "3000", pages[i]);
         //console.log(pagerequest);
         let todaydate = fbowned.dateFormatter(new Date());
         let yesterdaydate = fbowned.dateFormatter(yesterday);
@@ -39,7 +40,9 @@ function app(accessdata, pages, dbdata){
         rp(options)
             .then(function(response){
                 //fbowned funcion success
+                console.log(yesterdaydate);
                 let apmjson = fbowned.apmmetrics(response, yesterdaydate, dbdata);
+                console.log(apmjson);
                 let fbpagedata = fbowned.fbmetrics(response, todaydate, lastweekdate, "10", apmjson, dbdata);
                 fbpagebulk.push(fbpagedata[0]);
                 for(post=0;post<fbpagedata[1].length;post++){

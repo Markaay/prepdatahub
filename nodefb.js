@@ -9,8 +9,9 @@ exports.constructfb = function(accessdata, postlimit, commentlimit, likelimit, p
     let api_post_limit = postlimit;
     let api_comment_limit = commentlimit;
     let api_like_limit = likelimit;
-    let api_fields = "id,name,posts.limit("+api_post_limit+"){comments.limit("+api_comment_limit+"){message,id,comment_count,created_time,like_count},caption,likes.limit("+api_like_limit+"),timeline_visibility,message,shares,type,created_time},fan_count,talking_about_count,were_here_count";
+    let api_fields = "id,name,posts.limit("+api_post_limit+"){comments.limit("+api_comment_limit+"){message,id,comment_count,created_time,like_count},caption,likes.summary(true),timeline_visibility,message,shares,type,created_time},fan_count,talking_about_count,were_here_count";
     let api_construct = api_base+"/"+api_version+"/"+page+"?fields="+api_fields+"&access_token="+accessdata.app_access_token;
+    console.log(api_construct);
     return api_construct;
 }
 
@@ -71,11 +72,13 @@ exports.apmmetrics = function(pagejson, yesterdaydate, dbdata){
     });
     //end mysql database connection 
     con.end();
+    console.log(apmdata);
     return apmdata;
 }
 
 //get complete set of facebook data
 exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, apmdata, dbdata){
+    console.log(pagejson);
     //total data trackers
     let post_like_total = 0;
     let post_comment_total = 0;
@@ -85,7 +88,9 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
     let fbpost_array = [];
     let fbcomment_array = [];
     //loop through page post
+    console.log("step 1");
     for(i=0;i<fbposts.length;i++){
+        console.log("add to ipm post, post nr: " + i);
         //console.log(fbposts[i].created_time.substring(0,10));
         //console.log(lastweekdate);
         let post_comments_base = 0;
@@ -96,37 +101,26 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
             post_comments_base = fbposts[i].comments.data.length;
         }
         if("likes" in fbposts[i]){
-            post_likes_base = fbposts[i].likes.data.length;
+            post_likes_base = fbposts[i].likes.summary.total_count;
+            console.log("post likes: " + post_likes_base);
         }        
         if("shares" in fbposts[i]){
             post_share_base = fbposts[i].shares.count;
         }
         //aggregate ipm data of last x amount of posts
-        if(i<ipmpostamount){
+        if(i<parseInt(ipmpostamount)){
             post_like_total = post_like_total + post_likes_base;
+            console.log(post_like_total);
             post_comment_total = post_comment_total + post_comments_base;
+            console.log(post_comment_total);
             post_share_total = post_share_total + post_share_base;
-        }
-        //page data to export
-        let page_obj = {
-            "scrape_date": todaydate + " 00:00:00",
-            "page_id": pagejson.id,
-            "page_name": pagejson.name,
-            "page_fan_count": pagejson.fan_count,
-            "page_were_here_count": pagejson.were_here_count,
-            "page_talking_about_count": pagejson.talking_about_count,
-            "post_like_total": post_like_total,
-            "post_comment_total": post_comment_total,
-            "post_share_total": post_share_total,
-            "page_new_fans": apmdata.page_new_fans,
-            "page_new_here": apmdata.page_new_here,
-            "page_new_talks": apmdata.page_new_talks
+            console.log(post_share_total);
         }
         //Array to push to fbpage bulk array
         fbpage_array = [todaydate + " 00:00:00", pagejson.id, pagejson.name, pagejson.fan_count, pagejson.were_here_count, pagejson.talking_about_count, post_like_total, post_comment_total, post_share_total, apmdata.page_new_fans, apmdata.page_new_here, apmdata.page_new_talks];
         //get post data from last week to save
         if(fbposts[i].created_time.substring(0,10) === lastweekdate){
-            //console.log("post date match");
+            console.log("post date match");
             let post_message = "";
             let post_comments_count = 0;
             let post_likes_count = 0;
@@ -138,7 +132,7 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
                 post_comments_count = fbposts[i].comments.data.length;
             }
             if("likes" in fbposts[i]){
-                post_likes_count = fbposts[i].likes.data.length;
+                post_likes_count = fbposts[i].likes.summary.total_count;
             }
             if("shares" in fbposts[i]){
                 post_share_count = fbposts[i].shares.count;
@@ -171,6 +165,22 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
             }
         }
     }
+    //page data to export
+    let page_obj = {
+        "scrape_date": todaydate + " 00:00:00",
+        "page_id": pagejson.id,
+        "page_name": pagejson.name,
+        "page_fan_count": pagejson.fan_count,
+        "page_were_here_count": pagejson.were_here_count,
+        "page_talking_about_count": pagejson.talking_about_count,
+        "post_like_total": post_like_total,
+        "post_comment_total": post_comment_total,
+        "post_share_total": post_share_total,
+        "page_new_fans": apmdata.page_new_fans,
+        "page_new_here": apmdata.page_new_here,
+        "page_new_talks": apmdata.page_new_talks
+    }
+    console.log(page_obj)
     fbdata = [];
     fbdata.push(fbpage_array, fbpost_array, fbcomment_array);
     return fbdata;

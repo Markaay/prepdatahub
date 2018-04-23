@@ -6,7 +6,7 @@ const mysqlpromise = require('promise-mysql');
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = "prepdatahub/";
+const pathsource = "/prepdatahub/";
 
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
@@ -40,6 +40,7 @@ function app(accessdata, pages, dbdata){
         };
         rp(options)
             .then(function(response){
+                completedpromises++;
                 //fbowned funcion success
                 //construct sql query
                 let fans = 0;
@@ -85,7 +86,6 @@ function app(accessdata, pages, dbdata){
                     for(comment=0;comment<fbpagedata[2].length;comment++){
                         fbcommentbulk.push(fbpagedata[2][comment]);
                     }
-                    completedpromises++;
                     console.log("completed promises: "+ completedpromises + " of: " + pages.length);
                     //all promises are complete and data could be send in bulk
                     if(completedpromises===pages.length){

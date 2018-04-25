@@ -9,7 +9,7 @@ exports.constructfb = function(accessdata, postlimit, commentlimit, likelimit, p
     let api_post_limit = postlimit;
     let api_comment_limit = commentlimit;
     let api_like_limit = likelimit;
-    let api_fields = "id,name,posts.limit("+api_post_limit+"){comments.summary(true){message,id,comment_count,created_time,like_count},caption,likes.summary(true),timeline_visibility,message,shares,type,created_time},fan_count,talking_about_count,were_here_count";
+    let api_fields = "id,name,posts.limit("+api_post_limit+"){comments.limit("+api_comment_limit+"){message,id,comment_count,created_time,like_count},caption,likes.summary(true),timeline_visibility,message,shares,type,created_time},fan_count,talking_about_count,were_here_count";
     let api_construct = api_base+"/"+api_version+"/"+page+"?fields="+api_fields+"&access_token="+accessdata.app_access_token;
     console.log(api_construct);
     return api_construct;
@@ -24,58 +24,6 @@ exports.dateFormatter = function(date){
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
     return [year, month, day].join('-');
-}
-
-//get page apm data
-exports.apmmetrics = function(pagejson, yesterdaydate, dbdata){
-    //create neutral apm object
-    let fans = 0;
-    let here = 0;
-    let talks = 0;
-    //console.log(apmdata);
-    //setup connection information
-    let con = mysql.createConnection({
-        host: dbdata.con_ip,
-        user: dbdata.con_user,
-        password: dbdata.con_pass,
-        database : dbdata.db_name
-    });
-    //connect to mysql database with setup
-    con.connect();
-
-    //construct sql query
-    let startTime = yesterdaydate+" 00:00:00";
-    let endTime = yesterdaydate+" 23:59:59";
-    let query = "SELECT page_name, page_id, page_fan_count, page_were_here_count, page_talking_about_count FROM " + dbdata.page_table + " WHERE page_name = '" + pagejson.name + "' AND scrape_date BETWEEN '" + startTime + "' AND '" + endTime +"' ";
-    console.log(query);
-
-    //run query in database
-    let outcome = con.query(query, function (error, results, fields){
-        if (error) throw error;
-        //check if there is a result opbject
-        if(results[0] !== undefined){
-            //check if there is a key object for each apm variable
-            if("page_fan_count" in results[0]){
-                fans = pagejson.fan_count - results[0].page_fan_count;
-            }
-            if("page_were_here_count" in results[0]){
-                here = pagejson.were_here_count - results[0].page_were_here_count;
-            }
-            if("page_talking_about_count" in results[0]){
-                talks = pagejson.talking_about_count- results[0].page_talking_about_count;
-            }
-            let apmdata = {
-                "page_name": pagejson.name,
-                "page_new_fans": fans,
-                "page_new_here": here,
-                "page_new_talks": talks
-            }
-            console.log(apmdata);
-            con.end();
-            return apmdata;
-        }
-    });
-    return outcome;
 }
 
 //get complete set of facebook data

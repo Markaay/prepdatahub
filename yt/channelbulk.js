@@ -6,7 +6,7 @@ const mysqlpromise = require('promise-mysql');
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = ""; //"prepdatahub/yt/"
+const pathsource = "prepdatahub/yt/";
 
 //load access data
 const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));

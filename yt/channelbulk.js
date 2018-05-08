@@ -10,17 +10,24 @@ const pathsource = "prepdatahub/yt/";
 
 //load access data
 const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
-const channel_usernames = JSON.parse(fs.readFileSync(pathsource + 'channels.json', 'utf8'));
-const channel_array = channel_usernames.channels;
+const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
+const channel_ids = [];
+for(i=0;i<mappingkeys.maps.length;i++){
+    if(mappingkeys.maps[i][3]!=="na"){
+        channel_ids.push(mappingkeys.maps[i][3]);
+    }
+}
+console.log(channel_ids);
+
 let today = new Date();
 let yesterday = new Date().setDate(new Date().getDate() - 1);
 
-function app(channel_usernames, dbdata){
+function app(channel_ids, dbdata){
     let ytchannelbulk = [];
     let completedpromises = 0;
-    for(i=0;i<channel_usernames.length;i++){
-        let currentchannel = channel_usernames[i];
-        let api_request = yt.constructyt(channel_usernames[i]);
+    for(i=0;i<channel_ids.length;i++){
+        let currentchannel = channel_ids[i];
+        let api_request = yt.constructyt(channel_ids[i]);
         let todaydate = yt.dateFormatter(today);
         let yesterdaydate = yt.dateFormatter(yesterday);
         //construct GET request
@@ -85,4 +92,4 @@ function app(channel_usernames, dbdata){
     }
 }
 
-app(channel_array, dbdata);
+app(channel_ids, dbdata);

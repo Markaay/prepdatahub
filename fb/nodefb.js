@@ -151,9 +151,9 @@ exports.bulkmysql = function(pagebulk, postbulk, commentbulk, dbdata){
         if(err) throw err;
         console.log('post data inserted');
     });
-    con.query(commentquery, [commentbulk], function(err, result){
-        if(err) throw err;
-        console.log('comment data inserted');
-    });
+    //con.query(commentquery, [commentbulk], function(err, result){
+    //    if(err) throw err;
+    //    console.log('comment data inserted');
+    //});
     con.end();
 }

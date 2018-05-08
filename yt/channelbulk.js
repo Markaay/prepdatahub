@@ -12,9 +12,9 @@ const pathsource = "prepdatahub/yt/";
 const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
 const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
 const channel_ids = [];
-for(i=0;i<mappingkeys.maps.length;i++){
-    if(mappingkeys.maps[i][3]!=="na"){
-        channel_ids.push(mappingkeys.maps[i][3]);
+for(i=0;i<mappingkeys.map.length;i++){
+    if(mappingkeys.map[i][3]!=="na"){
+        channel_ids.push(mappingkeys.map[i][3]);
     }
 }
 console.log(channel_ids);

@@ -2,7 +2,7 @@ const fs = require('fs');
 const mysql = require('mysql');
 
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = ""; //"prepdatahub/"
+const pathsource = "prepdatahub/"; //"prepdatahub/"
 
 const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata_master.json', 'utf8'));
 const mappingkeys = JSON.parse(fs.readFileSync(pathsource + 'mappingkeys.json', 'utf8'));

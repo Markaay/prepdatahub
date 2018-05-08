@@ -7,7 +7,7 @@ exports.constructyt = function(channelid){
     let api_base = "https://www.googleapis.com/youtube/v3/channels?";
     let api_parts = "status,brandingSettings,snippet,statistics,contentDetails";
     let api_key = "AIzaSyAgM9xgWw3MGCFV-1YOo2ruu9yScHImmVo";
-    let api_request = api_base + "part=" + api_parts + "&forUsername=" + channelid + "&key=" + api_key;
+    let api_request = api_base + "part=" + api_parts + "&id=" + channelid + "&key=" + api_key;
     console.log(api_request)
     return api_request;
 }

@@ -72,9 +72,9 @@ function app(channel_ids, dbdata){
                     let channel_array = [todaydate + " 00:00:00", response.items[0].id, currentchannel, response.items[0].statistics.viewCount, response.items[0].statistics.commentCount, response.items[0].statistics.subscriberCount, response.items[0].statistics.videoCount, new_views, new_subs, new_vids];
                     ytchannelbulk.push(channel_array);   
                     completedpromises++; 
-                    console.log(completedpromises, "van de ", channel_usernames.length);
-                    console.log(completedpromises===channel_usernames.length);
-                    if(completedpromises===channel_usernames.length){
+                    console.log(completedpromises, "van de ", channel_ids.length);
+                    console.log(completedpromises===channel_ids.length);
+                    if(completedpromises===channel_ids.length){
                         console.log(ytchannelbulk);
                         yt.bulkmysql(ytchannelbulk, dbdata);
                     }
@@ -84,7 +84,7 @@ function app(channel_ids, dbdata){
                 //fbowned function failed
                 console.log(err);
                 completedpromises++;
-                if(completedpromises===channel_usernames.length){
+                if(completedpromises===channel_ids.length){
                     console.log(ytchannelbulk)
                     yt.bulkmysql(ytchannelbulk, dbdata);
                 }

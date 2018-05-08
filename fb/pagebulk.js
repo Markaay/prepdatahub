@@ -10,10 +10,15 @@ const pathsource = "prepdatahub/fb/";
 
 //load access data
 const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
-const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
-const pagearray = JSON.parse(fs.readFileSync(pathsource + 'pages.json', 'utf8'));
-const pages = pagearray.pages;
-//const pages = ["afcajax", "PSV", "feyenoord", "AZAlkmaar", "FCUtrecht1970", "ADODenHaag", "peczwolle", "VitesseArnhem", "scheerenveen", "HeraclesAlmelo", "VVV.Venlo", "FCGroningen", "excelsiorrdam", "WillemIITilburg", "FCTwente", "NACnl", "SpartaRotterdam", "RodaJCKerkrade", "NECNijmegen"];
+const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/" + 'dbdata_master.json', 'utf8'));
+let pages = [];
+const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
+for(i=0;i<mappingkeys.map.length;i++){
+    if(mappingkeys.map[i][2]!=="na"){
+        pagearray.push(pages.map[i][2]);
+    }
+}
+console.log(pages);
 
 let today = new Date();
 let yesterday = new Date().setDate(new Date().getDate() - 1);

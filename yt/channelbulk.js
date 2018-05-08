@@ -9,7 +9,7 @@ process.env.UV_THREADPOOL_SIZE = 128;
 const pathsource = "prepdatahub/yt/";
 
 //load access data
-const dbdata =  JSON.parse(fs.readFileSync(pathsource + 'dbdata.json', 'utf8'));
+const dbdata =  JSON.parse(fs.readFileSync('prepdatahub/' + 'dbdata_master.json', 'utf8'));
 const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
 const channel_ids = [];
 for(i=0;i<mappingkeys.map.length;i++){

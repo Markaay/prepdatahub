@@ -14,8 +14,8 @@ const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/" + 'dbdata_master.json'
 let pages = [];
 const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
 for(i=0;i<mappingkeys.map.length;i++){
-    if(mappingkeys.map[i][2]!=="na"){
-        pagearray.push(pages.map[i][2]);
+    if(mappingkeys.map[i][2]!=="na" && mappingkeys.map[i][2]!==undefined){
+        pages.push(mappingkeys.map[i][2]);
     }
 }
 console.log(pages);

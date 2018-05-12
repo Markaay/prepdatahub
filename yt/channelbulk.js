@@ -69,7 +69,7 @@ function app(channel_ids, dbdata){
                             new_vids = response.items[0].statistics.videoCount- rows[0].video_count;
                         }
                     }
-                    let channel_array = [todaydate + " 00:00:00", response.items[0].id, currentchannel, response.items[0].statistics.viewCount, response.items[0].statistics.commentCount, response.items[0].statistics.subscriberCount, response.items[0].statistics.videoCount, new_views, new_subs, new_vids];
+                    let channel_array = [todaydate + " 00:00:00", response.items[0].id, response.items[0].snippet.title, response.items[0].statistics.viewCount, response.items[0].statistics.commentCount, response.items[0].statistics.subscriberCount, response.items[0].statistics.videoCount, new_views, new_subs, new_vids];
                     ytchannelbulk.push(channel_array);   
                     completedpromises++; 
                     console.log(completedpromises, "van de ", channel_ids.length);

@@ -1,5 +1,6 @@
 //dependencies
 const rp = require('request-promise');
+const fbowned = require("./nodefb.js");
 const mysql = require('mysql');
 const utf8 = require('utf8');
 
@@ -27,7 +28,7 @@ exports.dateFormatter = function(date){
 }
 
 //get complete set of facebook data
-exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, apmdata, dbdata){
+exports.fbmetrics = function(page_url_id, pagejson, todaydate, lastweekdate, ipmpostamount, apmdata, dbdata){
     //total data trackers
     let post_like_total = 0;
     let post_comment_total = 0;
@@ -60,7 +61,7 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
             post_share_total = post_share_total + post_share_base;
         }
         //Array to push to fbpage bulk array
-        fbpage_array = [todaydate + " 00:00:00", pagejson.id, pagejson.name, pagejson.fan_count, pagejson.were_here_count, pagejson.talking_about_count, post_like_total, post_comment_total, post_share_total, apmdata.page_new_fans, apmdata.page_new_here, apmdata.page_new_talks];
+        fbpage_array = [todaydate + " 00:00:00", pagejson.id, pagejson.name, pagejson.fan_count, pagejson.were_here_count, pagejson.talking_about_count, post_like_total, post_comment_total, post_share_total, apmdata.page_new_fans, apmdata.page_new_here, apmdata.page_new_talks, page_url_id];
         //get post data from last week to save
         if(fbposts[i].created_time.substring(0,10) === lastweekdate){
             console.log("post date match");
@@ -121,7 +122,8 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
         "post_share_total": post_share_total,
         "page_new_fans": apmdata.page_new_fans,
         "page_new_here": apmdata.page_new_here,
-        "page_new_talks": apmdata.page_new_talks
+        "page_new_talks": apmdata.page_new_talks,
+        "page_url_id": page_url_id
     }
     console.log(page_obj)
     fbdata = [];
@@ -131,7 +133,7 @@ exports.fbmetrics = function(pagejson, todaydate, lastweekdate, ipmpostamount, a
 
 //bulk transfer to mysql
 exports.bulkmysql = function(pagebulk, postbulk, commentbulk, dbdata){
-    let pagequery = "INSERT INTO " + dbdata.page_table + " (scrape_date,page_id,page_name,page_fan_count,page_were_here_count,page_talking_about_count,post_like_total,post_comment_total,post_share_total,page_new_fans,page_new_here,page_new_talks) VALUES ?";
+    let pagequery = "INSERT INTO " + dbdata.page_table + " (scrape_date,page_id,page_name,page_fan_count,page_were_here_count,page_talking_about_count,post_like_total,post_comment_total,post_share_total,page_new_fans,page_new_here,page_new_talks,page_url_id) VALUES ?";
     let postquery = "INSERT INTO " + dbdata.post_table + " (scrape_date,page_id,page_name,post_id,post_type,post_created_time,post_message,post_timeline_visibility,post_comment_count,post_like_count,post_share_count) VALUES ?";;
     let commentquery = "INSERT INTO " + dbdata.comment_table + " (scrape_date,page_id,page_name,post_id,comment_id,comment_created_time,comment_message,comment_like_count,comment_comment_count) VALUES ?" ;
     //setup connection
@@ -151,9 +153,9 @@ exports.bulkmysql = function(pagebulk, postbulk, commentbulk, dbdata){
         if(err) throw err;
         console.log('post data inserted');
     });
-    //con.query(commentquery, [commentbulk], function(err, result){
-    //    if(err) throw err;
-    //    console.log('comment data inserted');
-    //});
+    con.query(commentquery, [commentbulk], function(err, result){
+        if(err) throw err;
+        console.log('comment data inserted or enabled pages');
+    });
     con.end();
 }

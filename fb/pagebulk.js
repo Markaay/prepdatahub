@@ -14,8 +14,10 @@ const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/" + 'dbdata_master.json'
 let pages = [];
 const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
 for(i=0;i<mappingkeys.map.length;i++){
-    if(mappingkeys.map[i][2]!=="na" && mappingkeys.map[i][2]!==undefined){
-        pages.push(mappingkeys.map[i][2]);
+    if(mappingkeys.map[i][2]!=="na" && mappingkeys.map[i][2]!=="fbid" && mappingkeys.map[i][2]!==undefined){
+        //push the page_url_id and the fbsent status
+        //console.log(mappingkeys.map[i][2], mappingkeys.map[i][4]);
+        pages.push([mappingkeys.map[i][2], mappingkeys.map[i][4]]);
     }
 }
 console.log(pages);
@@ -31,7 +33,9 @@ function app(accessdata, pages, dbdata){
     let completedpromises = 0;
     for(i=0;i<pages.length;i++){
         console.log(pages[i]);
-        let pagerequest = fbowned.constructfb(accessdata, 20, 2000, 3000, pages[i]);
+        let pagerequest = fbowned.constructfb(accessdata, 20, 2000, 3000, pages[i][0]);
+        let page_url_id = pages[i][0];
+        let fbsent = pages[i][1];
         //console.log(pagerequest);
         let todaydate = fbowned.dateFormatter(today);
         let yesterdaydate = fbowned.dateFormatter(yesterday);
@@ -83,13 +87,17 @@ function app(accessdata, pages, dbdata){
                         "page_new_here": here,
                         "page_new_talks": talks
                     }
-                    let fbpagedata = fbowned.fbmetrics(response, todaydate, lastweekdate, "10", apmdata, dbdata);
+                    let fbpagedata = fbowned.fbmetrics(page_url_id, response, todaydate, lastweekdate, "10", apmdata, dbdata);
                     fbpagebulk.push(fbpagedata[0]);
                     for(post=0;post<fbpagedata[1].length;post++){
                         fbpostbulk.push(fbpagedata[1][post]);
                     }
-                    for(comment=0;comment<fbpagedata[2].length;comment++){
-                        fbcommentbulk.push(fbpagedata[2][comment]);
+                    console.log(fbsent);
+                    if(fbsent==="yes"){
+                        console.log("status is enabled for comment collection");
+                        for(comment=0;comment<fbpagedata[2].length;comment++){
+                            fbcommentbulk.push(fbpagedata[2][comment]);
+                        }
                     }
                     console.log("completed promises: "+ completedpromises + " of: " + pages.length);
                     //all promises are complete and data could be send in bulk

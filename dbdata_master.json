@@ -8,5 +8,6 @@
     "channel_table": "yt_channel",
     "page_table": "fb_pagedata",
     "post_table": "fb_posts",
-    "comment_table": "fb_comments"
+    "comment_table": "fb_comments",
+    "comment_sentiment_table": "fb_comment_sentiment"
 }

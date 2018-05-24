@@ -1,5 +1,6 @@
 const fs = require('fs');
 const rp = require('request-promise');
+const request = require('request');
 const mysqlpromise = require('promise-mysql');
 const fbowned = require("./nodefb.js");
 
@@ -12,7 +13,7 @@ const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/" + 'dbdata_master.json'
 let commentsToReview = [];
 
 let today = new Date();
-let yesterday = new Date().setDate(new Date().getDate() - 2);
+let yesterday = new Date().setDate(new Date().getDate() - 1); //change to 1 once published!
 let lastweekday = new Date().setDate(new Date().getDate() - 7);
 let todaydate = fbowned.dateFormatter(today);
 let yesterdaydate = fbowned.dateFormatter(yesterday);
@@ -24,6 +25,7 @@ let endTime = yesterdaydate+" 23:59:59";
 //get all yesteday's comments for enabled pages
 let query = "SELECT datahub.fb_comments.*,datahub.fb_pagedata.page_url_id, datahub.mapping_table.fb_sent,datahub.mapping_table.object_category, datahub.mapping_table.object_name FROM datahub.fb_comments INNER JOIN datahub.fb_pagedata ON datahub.fb_pagedata.page_id=datahub.fb_comments.page_id INNER JOIN datahub.mapping_table ON datahub.fb_pagedata.page_url_id=datahub.mapping_table.fb_id AND datahub.mapping_table.fb_sent='yes' AND datahub.fb_comments.scrape_date BETWEEN '" + startTime +"' AND '" + endTime + "';";
 console.log(query);
+let commentBulk = [];
 mysqlpromise.createConnection({
     host: dbdata.con_ip,
     user: dbdata.con_user,
@@ -35,42 +37,58 @@ mysqlpromise.createConnection({
         conn.end();
         return result;
     }).then(function(rows){
-        console.log(rows);
-
+        //console.log(rows[0].comment_message);
+        let messageCount = rows.length;
+        //console.log(messageCount);
+        let messageStart = 0;
+        //loop through every comment from the query
+        for(k=0;k<rows.length;k++){
+            //only analyze comments longer than 20 characters
+            if(rows[k].comment_message.length > 50){
+                console.log(k + " van " + messageCount);
+                //console.log(rows[k].comment_message);
+                let message = rows[k].comment_message;
+                let sentimentComment = [rows[k].scrape_date, rows[k].page_id, rows[k].page_name, rows[k].post_id, rows[k].comment_id, rows[k].comment_created_time, rows[k].comment_message, rows[k].comment_like_count, rows[k].comment_comment_count];
+                //set options
+                request.post({
+                    method: 'POST',
+                    timeout: 20000,
+                    headers: {
+                        "X-Mashape-Key": apidata.key,
+                        "Content-Type": apidata.contentType,
+                        "Accept": apidata.accept
+                    },
+                    form: {
+                        language: apidata.language,
+                        text: message
+                    },
+                    url: 'https://japerk-text-processing.p.mashape.com/sentiment/',
+                    json: true
+                }, function(error, response, body){
+                    messageStart++
+                    console.log("sentiment ready of: " + messageStart +" of " + messageCount);
+                    console.log(body);
+                    sentimentComment.push(body.label);
+                    sentimentComment.push(body.probability.pos);
+                    sentimentComment.push(body.probability.neg);
+                    sentimentComment.push(body.probability.neutral);
+                    commentBulk.push(sentimentComment);
+                    console.log(sentimentComment);
+                    console.log
+                    if(messageStart === messageCount){
+                        fbowned.sentimentmysql(commentBulk, dbdata);
+                    }
+                });
+            }
+            else{
+                //comment skipped due to length
+                messageStart++;
+                if(messageStart === messageCount){
+                    fbowned.sentimentmysql(commentBulk, dbdata);
+                }
+            }
+        }
 
     }).catch(function(err){
-
-
+        console.log(err);
     })
-
-
-
-exports.commentsentiment = function(sent_api_data, textstring){
-    //set options
-    let options = {
-        method: 'POST',
-        uri: 'https://japerk-text-processing.p.mashape.com/sentiment/',
-        headers: {
-            "X-Mashape-Key": sent_api_data.key,
-            "Content-Type": sent_api_data.contentType,
-            "Accept": sent_api_data.accept
-        },
-        form: {
-            language: sent_api_data.language,
-            text: textstring
-        },
-        json: true // Automatically stringifies the body to JSON
-    };
-
-    rp(options)
-        .then(function(bodyresponse){
-            // POST succeeded...
-            console.log(bodyresponse.probability);
-        })
-        .catch(function(err){
-            // POST failed...
-            console.log(err);
-        });
-}
-
-let cd = exports.commentsentiment(apidata, "super goede supermarkt wow :)")

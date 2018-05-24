@@ -134,7 +134,7 @@ exports.fbmetrics = function(page_url_id, pagejson, todaydate, lastweekdate, ipm
 //bulk transfer to mysql
 exports.bulkmysql = function(pagebulk, postbulk, commentbulk, dbdata){
     let pagequery = "INSERT INTO " + dbdata.page_table + " (scrape_date,page_id,page_name,page_fan_count,page_were_here_count,page_talking_about_count,post_like_total,post_comment_total,post_share_total,page_new_fans,page_new_here,page_new_talks,page_url_id) VALUES ?";
-    let postquery = "INSERT INTO " + dbdata.post_table + " (scrape_date,page_id,page_name,post_id,post_type,post_created_time,post_message,post_timeline_visibility,post_comment_count,post_like_count,post_share_count) VALUES ?";;
+    let postquery = "INSERT INTO " + dbdata.post_table + " (scrape_date,page_id,page_name,post_id,post_type,post_created_time,post_message,post_timeline_visibility,post_comment_count,post_like_count,post_share_count) VALUES ?";
     let commentquery = "INSERT INTO " + dbdata.comment_table + " (scrape_date,page_id,page_name,post_id,comment_id,comment_created_time,comment_message,comment_like_count,comment_comment_count) VALUES ?" ;
     //setup connection
     let con = mysql.createConnection({
@@ -156,6 +156,25 @@ exports.bulkmysql = function(pagebulk, postbulk, commentbulk, dbdata){
     con.query(commentquery, [commentbulk], function(err, result){
         if(err) throw err;
         console.log('comment data inserted or enabled pages');
+    });
+    con.end();
+}
+
+//bulk transfer to mysql for sentiment data
+exports.sentimentmysql = function(commentbulk, dbdata){
+    let sentimentquery = "INSERT INTO " + dbdata.comment_sentiment_table + " (scrape_date,page_id,page_name,post_id,comment_id,comment_created_time,comment_message,comment_like_count,comment_comment_count,comment_sent_label,comment_positivity,comment_negativity,comment_neutrality) VALUES ?";
+//setup connection
+    let con = mysql.createConnection({
+        host: dbdata.con_ip,
+        user: dbdata.con_user,
+        password: dbdata.con_pass,
+        database : dbdata.db_name
+    });
+    //connect to mysql database with setup
+    con.connect();
+    con.query(sentimentquery, [commentbulk], function(err, result){
+        if(err) throw err;
+        console.log('sentiment data inserted');
     });
     con.end();
 }

@@ -23,7 +23,7 @@ let lastweekdate = fbowned.dateFormatter(lastweekday);
 let startTime = yesterdaydate+" 00:00:00";
 let endTime = yesterdaydate+" 23:59:59";
 //get all yesteday's comments for enabled pages
-let query = "SELECT datahub.fb_comments.*,datahub.fb_pagedata.page_url_id, datahub.mapping_table.fb_sent,datahub.mapping_table.object_category, datahub.mapping_table.object_name FROM datahub.fb_comments INNER JOIN datahub.fb_pagedata ON datahub.fb_pagedata.page_id=datahub.fb_comments.page_id INNER JOIN datahub.mapping_table ON datahub.fb_pagedata.page_url_id=datahub.mapping_table.fb_id AND datahub.mapping_table.fb_sent='yes' AND datahub.fb_comments.scrape_date BETWEEN '" + startTime +"' AND '" + endTime + "';";
+let query = "SELECT DISTINCT datahub.fb_comments.*,datahub.fb_pagedata.page_url_id, datahub.mapping_table.fb_sent,datahub.mapping_table.object_category, datahub.mapping_table.object_name FROM datahub.fb_comments INNER JOIN datahub.fb_pagedata ON datahub.fb_pagedata.page_id=datahub.fb_comments.page_id INNER JOIN datahub.mapping_table ON datahub.fb_pagedata.page_url_id=datahub.mapping_table.fb_id AND datahub.mapping_table.fb_sent='yes' AND datahub.fb_comments.scrape_date BETWEEN '" + startTime +"' AND '" + endTime + "';";
 console.log(query);
 let commentBulk = [];
 mysqlpromise.createConnection({

@@ -66,15 +66,16 @@ mysqlpromise.createConnection({
                     json: true
                 }, function(error, response, body){
                     messageStart++
-                    console.log("sentiment ready of: " + messageStart +" of " + messageCount);
-                    console.log(body);
-                    sentimentComment.push(body.label);
-                    sentimentComment.push(body.probability.pos);
-                    sentimentComment.push(body.probability.neg);
-                    sentimentComment.push(body.probability.neutral);
-                    commentBulk.push(sentimentComment);
-                    console.log(sentimentComment);
-                    console.log
+                    if(body!==undefined){
+                        console.log("sentiment ready of: " + messageStart +" of " + messageCount);
+                        console.log(body);
+                        sentimentComment.push(body.label);
+                        sentimentComment.push(body.probability.pos);
+                        sentimentComment.push(body.probability.neg);
+                        sentimentComment.push(body.probability.neutral);
+                        commentBulk.push(sentimentComment);
+                        console.log(sentimentComment);
+                    }
                     if(messageStart === messageCount){
                         fbowned.sentimentmysql(commentBulk, dbdata);
                     }

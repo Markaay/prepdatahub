@@ -170,6 +170,7 @@
         ["Mini", "Automotive", "mini.nederland", "UCxucUKaSTO9HPKJABiYwH2A", "no"],
         ["Subaru", "Automotive", "subarunederland", "UC-gJr-TBAb--_SvEKFQjEVg", "no"],
         ["Jeep", "Automotive", "jeepnederland", "UCfJJ1EkNo2h2PljbKPFqYTQ", "no"],
-        ["Smart", "Automotive", "smart.nederland", "UCV_Yk9w3HH3hqtJx326fS3w", "no"]
+        ["Smart", "Automotive", "smart.nederland", "UCV_Yk9w3HH3hqtJx326fS3w", "no"],
+        ["Jumbo Foodmarkt", "Supermarkten", "JumboFoodmarkt", "na", "yes"]
     ]
 }

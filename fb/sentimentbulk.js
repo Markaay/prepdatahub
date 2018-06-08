@@ -44,7 +44,7 @@ mysqlpromise.createConnection({
         //loop through every comment from the query
         for(k=0;k<rows.length;k++){
             //only analyze comments longer than 20 characters
-            if(rows[k].comment_message.length > 50){
+            if(rows[k].comment_message.length > 25){
                 console.log(k + " van " + messageCount);
                 //console.log(rows[k].comment_message);
                 let message = rows[k].comment_message;

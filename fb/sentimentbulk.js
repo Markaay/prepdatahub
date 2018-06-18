@@ -2,14 +2,21 @@ const fs = require('fs');
 const rp = require('request-promise');
 const request = require('request');
 const mysqlpromise = require('promise-mysql');
-const fbowned = require("./nodefb.js");
+const ip = require("ip");
+
+//testpath include on local machine
+let testpath = "";
+console.log("ip: "+ ip.address());
+if(ip.address().match(/192\.168\.178\.59/g)){
+    testpath = "/Users/Ebergen/Desktop";
+}
+const fbowned = require(testpath + "/prepdatahub/app_modules/fb_modules.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
 
-const pathsource = "prepdatahub/fb/";
-const apidata =  JSON.parse(fs.readFileSync(pathsource + 'apidata.json', 'utf8'));
-const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/" + 'dbdata_master.json', 'utf8'));
+const apidata =  JSON.parse(fs.readFileSync("prepdatahub/access_files/sentiment_access_data.json", 'utf8'));
+const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/access_files/dbdata_master.json", 'utf8'));
 let commentsToReview = [];
 
 let today = new Date();
@@ -89,7 +96,6 @@ mysqlpromise.createConnection({
                 }
             }
         }
-
     }).catch(function(err){
         console.log(err);
     })

@@ -1,6 +1,5 @@
 //dependencies
 const rp = require('request-promise');
-const fbowned = require("./nodefb.js");
 const mysql = require('mysql');
 const utf8 = require('utf8');
 

@@ -1,15 +1,22 @@
 //dependencies
 const fs = require('fs');
 const rp = require('request-promise');
-const yt = require("./nodeyt.js");
 const mysqlpromise = require('promise-mysql');
+const ip = require("ip");
+
+//testpath include on local machine
+let testpath = "";
+console.log("ip: "+ ip.address());
+if(ip.address().match(/192\.168\.178\.59/g)){
+    testpath = "/Users/Ebergen/Desktop";
+}
+const yt = require(testpath + "/prepdatahub/app_modules/yt_modules.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = "prepdatahub/yt/";
 
 //load access data
-const dbdata =  JSON.parse(fs.readFileSync('prepdatahub/' + 'dbdata_master.json', 'utf8'));
+const dbdata =  JSON.parse(fs.readFileSync('prepdatahub/access_files/' + 'dbdata_master.json', 'utf8'));
 const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
 const channel_ids = [];
 for(i=0;i<mappingkeys.map.length;i++){

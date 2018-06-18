@@ -1,16 +1,23 @@
 //dependencies
 const fs = require('fs');
 const rp = require('request-promise');
-const fbowned = require("./nodefb.js");
 const mysqlpromise = require('promise-mysql');
+const ip = require("ip");
+
+//testpath include on local machine
+let testpath = "";
+console.log("ip: "+ ip.address());
+if(ip.address().match(/192\.168\.178\.59/g)){
+    testpath = "/Users/Ebergen/Desktop";
+}
+const fbowned = require(testpath + "/prepdatahub/app_modules/fb_modules.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = "prepdatahub/fb/";
 
 //load access data
-const accessdata = JSON.parse(fs.readFileSync(pathsource + 'access_data.json', 'utf8'));
-const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/" + 'dbdata_master.json', 'utf8'));
+const accessdata = JSON.parse(fs.readFileSync("prepdatahub/access_files/fb_access_data.json", 'utf8'));
+const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/access_files/dbdata_master.json", 'utf8'));
 let pages = [];
 const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
 for(i=0;i<mappingkeys.map.length;i++){

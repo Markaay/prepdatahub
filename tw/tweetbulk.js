@@ -1,17 +1,25 @@
+//dependencies
 const fs = require('fs');
 const Twitter = require('twitter');
 const mysqlpromise = require('promise-mysql');
-const twowned = require("./nodetw.js");
 const utf8 = require('utf8');
+const ip = require("ip");
+
+//testpath include on local machine
+let testpath = "";
+console.log("ip: "+ ip.address());
+if(ip.address().match(/192\.168\.178\.59/g)){
+    testpath = "/Users/Ebergen/Desktop";
+}
+const twowned = require(testpath + "/prepdatahub/app_modules/tw_modules.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;
-const pathsource = "prepdatahub/tw/";
 
 //load access data
-const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/" + 'dbdata_master.json', 'utf8'));
-const mappingkeys = JSON.parse(fs.readFileSync('prepdatahub/' + 'mappingkeys.json', 'utf8'));
-const accessdata = JSON.parse(fs.readFileSync(pathsource + 'tw_access.json', 'utf8'));
+const dbdata =  JSON.parse(fs.readFileSync("prepdatahub/access_files/dbdata_master.json", 'utf8'));
+const mappingkeys = JSON.parse(fs.readFileSync("prepdatahub/mappingkeys.json", 'utf8'));
+const accessdata = JSON.parse(fs.readFileSync("prepdatahub/access_files/tw_access_data.json", 'utf8'));
 
 //current time
 let currentTime = new Date();

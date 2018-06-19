@@ -11,7 +11,11 @@ console.log("ip: "+ ip.address());
 if(ip.address().match(/192\.168\.178\.59/g)){
     testpath = "/Users/Ebergen/Desktop";
 }
+else{
+    testpath = "/root";
+}
 const twowned = require(testpath + "/prepdatahub/app_modules/tw_modules.js");
+const twowned = require("/prepdatahub/app_modules/tw_modules.js");
 
 //prevent error from occurring in requesting data from api!!
 process.env.UV_THREADPOOL_SIZE = 128;

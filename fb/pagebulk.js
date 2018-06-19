@@ -10,6 +10,9 @@ console.log("ip: "+ ip.address());
 if(ip.address().match(/192\.168\.178\.59/g)){
     testpath = "/Users/Ebergen/Desktop";
 }
+else{
+    testpath = "/root";
+}
 const fbowned = require(testpath + "/prepdatahub/app_modules/fb_modules.js");
 
 //prevent error from occurring in requesting data from api!!

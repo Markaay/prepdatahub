@@ -10,6 +10,9 @@ console.log("ip: "+ ip.address());
 if(ip.address().match(/192\.168\.178\.59/g)){
     testpath = "/Users/Ebergen/Desktop";
 }
+else{
+    testpath = "/root";
+}
 const yt = require(testpath + "/prepdatahub/app_modules/yt_modules.js");
 
 //prevent error from occurring in requesting data from api!!
